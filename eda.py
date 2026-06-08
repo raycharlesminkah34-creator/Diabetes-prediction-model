@@ -7,7 +7,6 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
-
 import matplotlib.pyplot as plt
 
 #_EXPLORATORY DATA ANALYSIS
@@ -74,5 +73,20 @@ rf_model_balance.fit(X_train, y_train)
 
 y_pred_balanced = rf_model_balance.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred_balanced)}")
-print("\nClassification Report:\n", classification_report(y_test, y_pred_balanced))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred_balanced))
+
+#XGBOOST model
+xgb_model = XGBClassifier(
+    n_estimators=100,
+    scale_pos_weight=500/268,
+    random_state=42,
+    eval_metric='logloss'
+)
+
+xgb_model.fit(X_train, y_train)
+y_pred_xgb = xgb_model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred_xgb)}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb))
+
+
 
