@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
@@ -82,7 +82,6 @@ xgb_model = XGBClassifier(
     random_state=42,
     eval_metric='logloss'
 )
-
 xgb_model.fit(X_train, y_train)
 y_pred_xgb = xgb_model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred_xgb)}")
@@ -97,10 +96,14 @@ xgb2_model = XGBClassifier(
     random_state=42,
     eval_metric='logloss'
 )
-
 xgb2_model.fit(X_train, y_train)
 y_pred_xgb2 = xgb2_model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred_xgb2)}")
-print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb2))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb2))
 
+#CROSS_VAL
+cv_scores = cross_val_score(xgb_model, X_train, y_train, cv=5, scoring='recall')
+print("CV Scores:", cv_scores)
+print("Mean recall:", cv_scores.mean().round(3))
+print("Std:", cv_scores.std().round(3))
 
