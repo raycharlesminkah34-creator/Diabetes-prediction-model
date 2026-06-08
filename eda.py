@@ -138,3 +138,7 @@ best_xgb = search.best_estimator_
 y_pred_best = best_xgb.predict(X_test)
 print(classification_report(y_pred_best, y_test))
 
+
+import joblib
+joblib.dump(xgb2_model, 'diabetes_xgb_best.pkl')
+
