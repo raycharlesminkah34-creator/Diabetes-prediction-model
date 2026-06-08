@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
+from xgboost import XGBClassifier
 
 import matplotlib.pyplot as plt
 
@@ -65,6 +66,13 @@ rf_model.fit(X_train, y_train)
 y_pred_rf = rf_model.predict(X_test)
 
 print(f"Accuracy: {accuracy_score(y_test, y_pred_rf)}")
-print("\nClassification Report:\n", classification_report(y_test, y_pred_rf))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred_rf))
 
+#BALANCED RF MODEL
+rf_model_balance = RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced')
+rf_model_balance.fit(X_train, y_train)
+
+y_pred_balanced = rf_model_balance.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred_balanced)}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred_balanced))
 
