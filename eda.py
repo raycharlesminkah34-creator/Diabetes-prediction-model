@@ -4,6 +4,7 @@ import seaborn as sns
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 
 import matplotlib.pyplot as plt
@@ -55,6 +56,15 @@ lr_model.fit(X_train, y_train)
 y_pred = lr_model.predict(X_test)
 
 print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-print("\nClassification Report:\n", classification_report(y_test, y_pred))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred))
+
+#RANDOM FOREST MODEL
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model.fit(X_train, y_train)
+
+y_pred_rf = rf_model.predict(X_test)
+
+print(f"Accuracy: {accuracy_score(y_test, y_pred_rf)}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred_rf))
 
 
