@@ -64,7 +64,7 @@ rf_model.fit(X_train, y_train)
 
 y_pred_rf = rf_model.predict(X_test)
 
-print(f"Accuracy: {accuracy_score(y_test, y_pred_rf)}")
+#print(f"Accuracy: {accuracy_score(y_test, y_pred_rf)}")
 #print("\nClassification Report:\n", classification_report(y_test, y_pred_rf))
 
 #BALANCED RF MODEL
@@ -72,7 +72,7 @@ rf_model_balance = RandomForestClassifier(n_estimators=100, random_state=42, cla
 rf_model_balance.fit(X_train, y_train)
 
 y_pred_balanced = rf_model_balance.predict(X_test)
-print(f"Accuracy: {accuracy_score(y_test, y_pred_balanced)}")
+#print(f"Accuracy: {accuracy_score(y_test, y_pred_balanced)}")
 #print("\nClassification Report:\n", classification_report(y_test, y_pred_balanced))
 
 #XGBOOST model
@@ -86,7 +86,21 @@ xgb_model = XGBClassifier(
 xgb_model.fit(X_train, y_train)
 y_pred_xgb = xgb_model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred_xgb)}")
-print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb))
+#print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb))
 
+#XGBOOST MODEL - TUNED
+xgb2_model = XGBClassifier(
+    n_estimators=200,
+    learning_rate=0.05,
+    scale_pos_weight=500/268,
+    subsample=0.8,
+    random_state=42,
+    eval_metric='logloss'
+)
+
+xgb2_model.fit(X_train, y_train)
+y_pred_xgb2 = xgb2_model.predict(X_test)
+print(f"Accuracy: {accuracy_score(y_test, y_pred_xgb2)}")
+print("\nClassification Report:\n", classification_report(y_test, y_pred_xgb2))
 
 
