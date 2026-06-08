@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split, cross_val_score, RandomizedSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
@@ -106,4 +106,35 @@ cv_scores = cross_val_score(xgb_model, X_train, y_train, cv=5, scoring='recall')
 print("CV Scores:", cv_scores)
 print("Mean recall:", cv_scores.mean().round(3))
 print("Std:", cv_scores.std().round(3))
+
+#FEATURE IMPORTANCE VISUALS
+#importance = pd.Series(xgb2_model.feature_importances_,index=X_train.columns)
+#importance.sort_values().plot(kind='barh', figsize=(8,5), title="XGBOOST FEATURE IMPORTANCE")
+#plt.tight_layout()
+#plt.show()
+
+param_grid = {
+    'n_estimators': [100, 200, 300, 400],
+    'max_depth': [3, 4, 5, 6],
+    'learning_rate': [0.01, 0.05, 0.1, 0.5],
+    'subsample': [0.6, 0.7, 0.8, 1.0],
+    'colsample_bytree': [0.6, 0.7, 0.8, 1.0]
+}
+
+search = RandomizedSearchCV(
+    XGBClassifier(eval_metric='logloss', random_state=42),
+    param_distributions=param_grid,
+    n_iter=50,
+    scoring='recall',
+    cv=5,
+    random_state=42           
+)
+
+search.fit(X_train, y_train)
+print("Best parameters:", search.best_params_)
+print("Best CV Recall:", search.best_score_.round(3))
+
+best_xgb = search.best_estimator_
+y_pred_best = best_xgb.predict(X_test)
+print(classification_report(y_pred_best, y_test))
 
