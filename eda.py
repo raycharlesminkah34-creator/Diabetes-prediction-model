@@ -8,6 +8,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
 import matplotlib.pyplot as plt
+import joblib
+
 
 #_EXPLORATORY DATA ANALYSIS
 df = pd.read_csv("diabetes.csv")
@@ -139,6 +141,20 @@ y_pred_best = best_xgb.predict(X_test)
 print(classification_report(y_pred_best, y_test))
 
 
-import joblib
 joblib.dump(xgb2_model, 'diabetes_xgb_best.pkl')
 
+#PREDICTION FUNCTION
+def predict_diabetes(pregnancies, glucose, blood_pressure, skin_thickness, bmi, dpf, age):
+    patient = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, bmi, dpf, age]])
+    prediction = xgb2_model.predict(patient)[0]
+    probability = xgb2_model.predict_proba(patient)[0][1]
+
+    results = {
+        'prediction': "Diabetic" if prediction == 1 else "Non-diabetic",
+        'probability': f"{probability:.2%}",
+        'risk_level': "High" if probability > 0.7 else "Medium" if probability > 0.4 else "Low"
+    }
+
+    return results
+
+print(predict_diabetes(1, 85, 66, 29, 26.6, 0.351, 31))
